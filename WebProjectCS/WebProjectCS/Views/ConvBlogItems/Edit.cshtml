@@ -1,0 +1,36 @@
+﻿@model WebProjectCS.Models.ConvBlogItem
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h4>ConvBlogItem</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ConvBlogItemID" />
+            <div class="form-group">
+                <label asp-for="ConvName" class="control-label"></label>
+                <input asp-for="ConvName" class="form-control" />
+                <span asp-validation-for="ConvName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConvCreatorName" class="control-label"></label>
+                <input asp-for="ConvCreatorName" class="form-control" />
+                <span asp-validation-for="ConvCreatorName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-controller="App" asp-action="Blog">Back to List</a>
+</div>
+

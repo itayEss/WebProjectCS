@@ -1,0 +1,30 @@
+﻿@model WebProjectCS.Models.ConvBlogItem
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ConvBlogItem</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ConvName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ConvName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ConvCreatorName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ConvCreatorName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.ConvBlogItemID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

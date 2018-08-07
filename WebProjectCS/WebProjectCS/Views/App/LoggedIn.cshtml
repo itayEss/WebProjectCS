@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewData["Title"] = "LoggedIn";
+}
+
+@using Microsoft.AspNetCore.Http
+
+
+@if (@ViewBag.sessionvId != null)
+{
+<p>Hello @ViewBag.sessionvName </p>
+}
+else
+{
+    //<script>console.log("my content" +  @ViewBag.sessionvId )</script>
+    <td><input type="checkbox" readonly>not!!</td>
+}
+

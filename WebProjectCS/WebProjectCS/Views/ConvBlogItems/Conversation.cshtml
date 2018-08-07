@@ -1,0 +1,74 @@
+﻿@model IEnumerable<WebProjectCS.Models.BlogItem>
+
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Conversation</h2>
+
+<p>
+    <a asp-controller="BlogItems" asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BlogItemID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ConvID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Subject)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Message)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RelatedID)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.BlogItemID)
+                </td>
+                <td>
+                    @Html.DisplayNameFor(model => model.Date)
+                </td>
+                <td>
+                    @Html.DisplayNameFor(model => model.ConvID)
+                </td>
+                <td>
+                    @Html.DisplayNameFor(model => model.UID)
+                </td>
+                <td>
+                    @Html.DisplayNameFor(model => model.Subject)
+                </td>
+                <td>
+                    @Html.DisplayNameFor(model => model.Message)
+                </td>
+                <td>
+                    @Html.DisplayNameFor(model => model.RelatedID)
+                </td>
+                <td>
+                    <a asp-controller="UserAcccounts" asp-action="Edit" asp-route-id="@item.BlogItemID">Edit</a> |
+                    <a asp-controller="UserAcccounts" asp-action="Details" asp-route-id="@item.BlogItemID">Details</a> |
+                    <a asp-controller="UserAcccounts" asp-action="Delete" asp-route-id="@item.BlogItemID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+

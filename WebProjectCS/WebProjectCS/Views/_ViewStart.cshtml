@@ -1,0 +1,14 @@
+﻿@using Microsoft.AspNetCore.Http;
+@{
+
+    if (Html.ViewContext.HttpContext.Session.GetString("UserPriv") != null)
+    {
+        Layout = "~/Views/Shared/Layout/_Layout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/Layout/_LoginLayout.cshtml";
+
+    }
+    //Layout = "_Layout";
+}

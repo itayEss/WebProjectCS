@@ -1,0 +1,58 @@
+﻿@model IEnumerable<WebProjectCS.Models.ConvBlogItem>
+@using Microsoft.AspNetCore.Http;
+
+@{var UPriv = Html.ViewContext.HttpContext.Session.GetInt32("UserPriv");}
+@{var UName = Html.ViewContext.HttpContext.Session.GetString("UserName");}
+@{var UserID = Html.ViewContext.HttpContext.Session.GetInt32("UserPriv");}
+
+@{
+    ViewData["Title"] = "Blog";
+}
+
+<h2>Welcome To The CyberBlog</h2>
+<p>This Blog is for Cyber Experts Only!</p>
+
+@if (UPriv == 1)
+{
+    <p>
+        <a asp-controller="ConvBlogItems" asp-action="Create">Create New Conversation</a>
+    </p>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Conversation Name
+            </th>
+            <th>
+                Conversation Creator Name
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                <a asp-controller="ConvBlogItems" asp-action="Conversation" asp-route-id="@item.ConvBlogItemID">
+                    @Html.DisplayFor(modelItem => item.ConvName)
+                </a>
+
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ConvCreatorName)             
+            </td>
+            @if (UPriv == 1)
+            {
+                <td>
+                    <a asp-controller="ConvBlogItems" asp-action="Edit" asp-route-id="@item.ConvBlogItemID">Edit</a> |
+                    <a asp-controller="ConvBlogItems" asp-action="Details" asp-route-id="@item.ConvBlogItemID">Details</a> |
+                    <a asp-controller="ConvBlogItems" asp-action="Delete" asp-route-id="@item.ConvBlogItemID">Delete</a>
+                </td>
+
+            }
+        </tr>
+            }
+    </tbody>
+</table>

@@ -1,0 +1,54 @@
+﻿@model WebProjectCS.Models.BlogItem
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>BlogItem</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ConvID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ConvID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.UID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.UID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Subject)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Subject)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Message)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Message)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.RelatedID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RelatedID)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.BlogItemID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
