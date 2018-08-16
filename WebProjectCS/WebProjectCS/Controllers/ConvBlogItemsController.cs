@@ -20,7 +20,10 @@ namespace WebProjectCS.Controllers
             using (ApplicationDbContextcs db = new ApplicationDbContextcs())
             {
                 var blogItem = db.blogItem
-                    .Where(b => b.RelatedID == id);
+                    .Where(b => b.ConvID == id)
+                    .Where(b => b.RelatedID == -1);
+                ViewData["ConvID"] = id;
+
                 return View(await blogItem.ToListAsync());
             }
         }

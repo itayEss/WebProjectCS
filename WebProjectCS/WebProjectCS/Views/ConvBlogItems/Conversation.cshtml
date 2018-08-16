@@ -1,14 +1,17 @@
 ﻿@model IEnumerable<WebProjectCS.Models.BlogItem>
+@inject IJsonHelper Json;
 
 
 @{
     ViewData["Title"] = "Index";
+
+
 }
 
 <h2>Conversation</h2>
 
 <p>
-    <a asp-controller="BlogItems" asp-action="Create">Create New</a>
+    <a asp-controller="BlogItems" asp-action="Create" asp-route-id=@ViewData["ConvID"]>Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -42,33 +45,112 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayNameFor(model => model.BlogItemID)
+                    @item.BlogItemID
                 </td>
                 <td>
-                    @Html.DisplayNameFor(model => model.Date)
+                    @item.Date
                 </td>
                 <td>
-                    @Html.DisplayNameFor(model => model.ConvID)
+                    @item.ConvID
                 </td>
                 <td>
-                    @Html.DisplayNameFor(model => model.UID)
+                    @item.UID
                 </td>
                 <td>
-                    @Html.DisplayNameFor(model => model.Subject)
+                    @item.Subject
                 </td>
                 <td>
-                    @Html.DisplayNameFor(model => model.Message)
+                    @item.Message
                 </td>
                 <td>
-                    @Html.DisplayNameFor(model => model.RelatedID)
+                    @item.RelatedID
                 </td>
                 <td>
-                    <a asp-controller="UserAcccounts" asp-action="Edit" asp-route-id="@item.BlogItemID">Edit</a> |
-                    <a asp-controller="UserAcccounts" asp-action="Details" asp-route-id="@item.BlogItemID">Details</a> |
-                    <a asp-controller="UserAcccounts" asp-action="Delete" asp-route-id="@item.BlogItemID">Delete</a>
+                    <a asp-controller="BlogItems" asp-action="Edit" asp-route-id="@item.BlogItemID" asp-route-cid="@item.ConvID">Edit</a> |
+                    <a asp-controller="BlogItems" asp-action="Details" asp-route-id="@item.BlogItemID">Details</a> |
+                    <a asp-controller="BlogItems" asp-action="Delete" asp-route-id="@item.BlogItemID">Delete</a> |
+                    <a asp-controller="BlogItems" asp-action="Comment" asp-route-rid="@item.BlogItemID" asp-route-cid="@item.ConvID">Comment</a>
+
                 </td>
             </tr>
+
+
+
+
         }
     </tbody>
+</table>
+<div id="blog-data" class="row">
 
+</div>
+
+
+
+
+
+    @section Scripts{
+
+<script>
+        doStuff();
+
+        function doStuff()
+        {
+            var model = @Html.Raw(Json.Serialize(Model));
+
+            for(var item in model)
+            {
+                //console.log(model[item].blogItemID);
+                var htmlLine = "<div class='row solid-borders'>"
+                console.log(model[item]);
+                htmlLine += builedBlogItem(model[item].blogItemID, model[item].convID,model[item].subject, model[item].message, model[item].uid, model[item].date)
+                $.get("../../../BlogItems/GetAllLeafs/" + model[item].blogItemID, function (data) {
+                    console.log(data);
+                    for (bi in data)
+                    {
+                        console.log("bi: data");
+
+                        console.log(data[bi]);
+
+                        htmlLine += builedBlogItem(data[bi].blogItemID, data[bi].convID,data[bi].subject, data[bi].message, data[bi].uid, data[bi].date)
+
+                    }
+                    htmlLine += "</div>";
+                    $('#blog-data').append(htmlLine);
+                   
+                })
+                    .done(function (data) {
+                    })
+                    .fail(function (data) {
+                    })
+                    .always(function (data) {
+                    });
+                
+
+            }
+
+        }
+
+        function builedBlogItem(bid,convID,subject, msg, username,date)
+        {
+            var tempBlogItem =
+                "<div class='solid-borders blog-item'>" +
+                    date +
+                    "<div class='subject-box'>" +
+                        subject +
+                    "</div>" +
+                    "<div class='massage-box'>" +
+                        "<br>"+username+":<br>"+ msg + "<br>" +
+                    "</div>" +
+                    "<div>" + 
+                        "<a href='/BlogItems/Edit/" + bid + "?cid=" + convID + "'>Edit</a> |" +
+                        "<a href='/BlogItems/Details/" + bid + "'>Details</a> | " +
+                        "<a href='/BlogItems/Delete/" + bid + "'>Delete</a> | " +
+                        "<a href='/BlogItems/Comment?rid=" + bid+"&amp;cid="+ convID + "'>Comment</a> " +
+            "</div>";
+            return tempBlogItem;
+
+        }
+
+</script>
+    }
 

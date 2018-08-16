@@ -159,7 +159,8 @@ namespace WebProjectCS.Controllers
                 var userAcccount = await db.userAccount.FindAsync(id);
                 db.userAccount.Remove(userAcccount);
                 await db.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                string url = @"../../App/Settings" ;
+                return Redirect(url);
             }
         }
 

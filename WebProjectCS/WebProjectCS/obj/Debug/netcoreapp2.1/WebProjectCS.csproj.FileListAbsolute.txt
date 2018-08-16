@@ -50,4 +50,4 @@ C:\Users\itaye\Documents\Visual Studio 2017\Projects\WebProjectCS\WebProjectCS\o
 C:\Users\itaye\Documents\Visual Studio 2017\Projects\WebProjectCS\WebProjectCS\obj\Debug\netcoreapp2.1\Razor\Views\BlogItems\Delete.g.cshtml.cs
 C:\Users\itaye\Documents\Visual Studio 2017\Projects\WebProjectCS\WebProjectCS\obj\Debug\netcoreapp2.1\Razor\Views\BlogItems\Details.g.cshtml.cs
 C:\Users\itaye\Documents\Visual Studio 2017\Projects\WebProjectCS\WebProjectCS\obj\Debug\netcoreapp2.1\Razor\Views\BlogItems\Edit.g.cshtml.cs
-C:\Users\itaye\Documents\Visual Studio 2017\Projects\WebProjectCS\WebProjectCS\obj\Debug\netcoreapp2.1\Razor\Views\BlogItems\Index.g.cshtml.cs
+C:\Users\itaye\Documents\Visual Studio 2017\Projects\WebProjectCS\WebProjectCS\obj\Debug\netcoreapp2.1\Razor\Views\BlogItems\Comment.g.cshtml.cs

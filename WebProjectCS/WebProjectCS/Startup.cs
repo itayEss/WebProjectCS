@@ -89,6 +89,14 @@ namespace WebProjectCS
                     name: "default",
                     template: "{controller=App}/{action=Index}/{id?}");
             });
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "template",
+                    template: "{controller=App}/{action=Index}/{id?}/{id2?}");
+            });
+
         }
     }
 }

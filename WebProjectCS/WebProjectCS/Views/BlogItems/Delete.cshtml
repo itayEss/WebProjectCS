@@ -52,6 +52,6 @@
     <form asp-action="Delete">
         <input type="hidden" asp-for="BlogItemID" />
         <input type="submit" value="Delete" class="btn btn-default" /> |
-        <a asp-action="Index">Back to List</a>
+        <a asp-controller="ConvBlogItems" asp-action="Conversation" asp-route-id=@Html.DisplayFor(model => model.ConvID)>Back to List</a>
     </form>
 </div>

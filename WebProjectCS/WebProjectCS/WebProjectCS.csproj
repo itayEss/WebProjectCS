@@ -16,9 +16,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Views\BlogItems\Comment.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Shared\Layout\_LoginLayout.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\Data\" />
   </ItemGroup>
 
 </Project>

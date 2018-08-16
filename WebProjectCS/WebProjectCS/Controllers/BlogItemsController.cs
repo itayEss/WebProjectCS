@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using WebProjectCS.Models;
 using WebProjectCS.Models.Managment;
 
@@ -12,7 +13,45 @@ namespace WebProjectCS.Controllers
 {
     public class BlogItemsController : Controller
     {
-        
+
+        public IActionResult GetAllLeafs(int? id)
+        {
+            using (ApplicationDbContextcs db = new ApplicationDbContextcs())
+            {
+                List<BlogItem> list = new List<BlogItem>();
+
+                addAllLeafs((int)id, list);
+
+                return Json(list);
+            }
+        }
+
+        private void addAllLeafs(int id, List<BlogItem> list)
+        {
+            using (ApplicationDbContextcs db = new ApplicationDbContextcs())
+            {
+                
+                var blogItems = GetBlogItemLeafList((int)id);
+                foreach (var item in blogItems)
+                {
+
+                    list.Add(item);
+                    addAllLeafs(item.BlogItemID, list);
+
+                }
+                
+            }
+        }
+
+        private List<BlogItem> GetBlogItemLeafList(int id)
+        {
+            using (ApplicationDbContextcs db = new ApplicationDbContextcs())
+            {
+                var blogList =  db.blogItem
+                    .Where(m => m.RelatedID == id).ToList();
+                return blogList;
+            }
+        }
 
         // GET: BlogItems/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -35,33 +74,43 @@ namespace WebProjectCS.Controllers
             }
         }
 
-        // GET: BlogItems/Create
-        public IActionResult Create()
+        // GET: BlogItems/Create/id
+        public IActionResult Create(int? id)
         {
+            ViewData["ConvID"] = id;
             return View();
         }
 
+        
+        public IActionResult Comment(int? rid, int? cid)
+        {
+            ViewData["ConvID"] = cid;
+            ViewData["RelID"] = rid;
+            return View();
+        }
         // POST: BlogItems/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BlogItemID,Date,ConvID,UID,Subject,Message,RelatedID")] BlogItem blogItem)
+        public async Task<IActionResult> Create([Bind("BlogItemID,ConvID,UID,Subject,Message,RelatedID")] BlogItem blogItem)
         {
             using (ApplicationDbContextcs db = new ApplicationDbContextcs())
             {
                 if (ModelState.IsValid)
                 {
+                    blogItem.Date = new DateTime();
                     db.Add(blogItem);
                     await db.SaveChangesAsync();
-                    return RedirectToAction("Conversation", "ConvBlogItems",blogItem.ConvID);
+                    string url = @"../../ConvBlogItems/Conversation/" + blogItem.ConvID;
+                    return Redirect(url);
                 }
                 return View(blogItem);
             }
         }
 
         // GET: BlogItems/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id,int? cid)
         {
             using (ApplicationDbContextcs db = new ApplicationDbContextcs())
             {
@@ -69,6 +118,7 @@ namespace WebProjectCS.Controllers
                 {
                     return NotFound();
                 }
+                ViewData["ConvID"] = cid;
 
                 var blogItem = await db.blogItem.FindAsync(id);
                 if (blogItem == null)
@@ -84,7 +134,7 @@ namespace WebProjectCS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BlogItemID,Date,ConvID,UID,Subject,Message,RelatedID")] BlogItem blogItem)
+        public async Task<IActionResult> Edit(int id, [Bind("BlogItemID,ConvID,Subject,Message")] BlogItem blogItem)
         {
             using (ApplicationDbContextcs db = new ApplicationDbContextcs())
             {
@@ -111,8 +161,10 @@ namespace WebProjectCS.Controllers
                             throw;
                         }
                     }
-                    return RedirectToAction("Conversation", "ConvBlogItems", blogItem.ConvID);
+                    string url = @"../../ConvBlogItems/Conversation/" + blogItem.ConvID;
+                    return Redirect(url);
                 }
+                ViewData["ConvID"] = blogItem.ConvID;
                 return View(blogItem);
             }
         }
@@ -138,6 +190,9 @@ namespace WebProjectCS.Controllers
             }
         }
 
+        //DELETE ALL COMMENTS RELATED
+        
+
         // POST: BlogItems/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -145,10 +200,40 @@ namespace WebProjectCS.Controllers
         {
             using (ApplicationDbContextcs db = new ApplicationDbContextcs())
             {
+                var chiledBlogItemList = await db.blogItem.Where(p => p.RelatedID == id).ToListAsync();
                 var blogItem = await db.blogItem.FindAsync(id);
-                db.blogItem.Remove(blogItem);
-                await db.SaveChangesAsync();
-                return RedirectToAction("Conversation", "ConvBlogItems", blogItem.ConvID);
+                int cid = blogItem.ConvID;
+                DeleteLeafs(chiledBlogItemList);
+                DeleteBlogItem(blogItem);
+                string url = @"../../ConvBlogItems/Conversation/" + cid;
+                return Redirect(url);
+            }
+        }
+
+        private async void DeleteBlogItem(BlogItem blogItem)
+        {
+            using (ApplicationDbContextcs db = new ApplicationDbContextcs())
+            {
+                if (blogItem != null)
+                {
+                    db.blogItem.Remove(blogItem);
+                    await db.SaveChangesAsync();
+                }
+            }
+        }
+        private async void DeleteLeafs(List<BlogItem> list)
+        {
+            using (ApplicationDbContextcs db = new ApplicationDbContextcs())
+            {
+                while (list.Count != 0)
+                {
+                    foreach(BlogItem bi in list)
+                    {
+                        var chiledBlogItemList = await db.blogItem.Where(p => p.RelatedID == bi.BlogItemID).ToListAsync();
+                        DeleteBlogItem(bi);
+                        DeleteLeafs(chiledBlogItemList);
+                    }
+                }
             }
         }
 
@@ -160,5 +245,15 @@ namespace WebProjectCS.Controllers
 
             }
         }
+
+        private bool RelatedBlogItemExists(int id)
+        {
+            using (ApplicationDbContextcs db = new ApplicationDbContextcs())
+            {
+                return db.blogItem.Any(e => e.RelatedID == id);
+
+            }
+        }
+
     }
 }

@@ -5,3 +5,33 @@
 li.login {
     float: right;
 }
+
+.solid-borders {
+    border-color: black;
+    border-style: solid;
+    margin:12px;
+}
+
+.blog-item {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    margin-left: 7px;
+    margin-right: 7px;
+}
+
+.subject-box {
+    margin-top: 10px;
+    margin-bottom: 3px;
+    margin-left: 7px;
+    margin-right: 7px;
+    padding-left:12px;
+    border-color: black;
+    border-style: solid;
+}
+
+.massage-box {
+    margin: 7px;
+    padding-left: 12px;
+    border-color: black;
+    border-style: solid;
+}

@@ -2,6 +2,156 @@
 @{
     ViewData["Title"] = "Index";
 }
+<style>
+    #map {
+        width: 100%;
+        height: 400px;
+        background-color: grey;
+    }
+</style>
+
+<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+    <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner " role="listbox">
+        <div id="carousel-id" class="item active">
+            <!-- Insert this tag where you want the widget to render -->
+                <iframe width="100%" height="400" src="https://cybermap.kaspersky.com/en/widget/dynamic/dark" frameborder="0"></iframe>
+                <div class="carousel-caption" role="option">
+                   
+                </div>
+        </div>
+        <div id="carousel-id" class="item">
+            <div class="container">
+            <img id="bc-tr" src="~/images/cyber-threat-pic.jpg" alt="Visual Studio" class="center-block" />
+            </div>
+            <div class="carousel-caption" role="option">
+               <!--<p>
+                    There are powerful new features in Visual Studio for building modern web apps.
+                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525030&clcid=0x409">
+                        Learn More
+                    </a>
+                </p>-->
+            </div>
+        </div>
+        <div id="carousel-id" class="item">
+            <div class="container">
+                <img class="center-block" src="~/images/cyber_division_header_resized.jpg" alt="Microsoft Azure"  height="405" width="100%"/>
+            </div>
+            <div class="carousel-caption" role="option">
+               <!--- <p>
+                    Learn how Microsoft's Azure cloud platform allows you to build, deploy, and scale web apps.
+                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525027&clcid=0x409">
+                        Learn More
+                    </a>
+                </p>-->
+            </div>
+        </div>
+    </div>
+    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
 
 <h2>Index for @ViewBag.sessionvName </h2>
+<div style="height:100%; width:100%;">
 
+    <div>
+        <!-- ommiting this div will show the map -->
+        <h3>My Google Maps Demo</h3>
+        <!--The div element for the map -->
+        <div id="map"></div>
+    </div>
+</div>
+@section Scripts
+    {
+    <script>
+        carouselNormalization();
+        var map;
+        // Initialize and add the map
+        function initMap() {
+            // The location of Uluru
+            var uluru = { lat: -25.344, lng: 131.036 };
+            // The map, centered at Uluru
+            map = new google.maps.Map(
+                document.getElementById('map'), {
+                    zoom: 3,
+                    center: { lat: 33.571475, lng: - 43.554599},
+                    mapTypeId: 'satellite'
+                    
+
+                });
+         
+            addLocation();
+            //https://developers.google.com/maps/documentation/javascript/markers   data refrence
+        }
+
+        function addLocation()
+        {
+            var myLatlng = new google.maps.LatLng(-25.363882, 131.044922);
+            var myLatlng1 = new google.maps.LatLng(-25.363882, 13.044922);
+
+            //var map = new google.maps.Map(document.getElementById("map"));
+            var marker = new google.maps.Marker({
+                position: myLatlng,
+                title: "Hello World!"
+            });
+            var marker1 = new google.maps.Marker({
+                position: myLatlng1,
+                title: "Hello World!"
+            });
+            marker.setMap(map);
+            marker1.setMap(map);
+
+
+         }
+         function carouselNormalization() {
+            var items = $('#carousel-id '), //grab all slides
+                heights = [], //create empty array to store height values
+                tallest; //create variable to make note of the tallest slide
+            if (items.length) {
+                function normalizeHeights() {
+                    items.each(function () { //add heights to array
+                        heights.push($(this).height());
+                    });
+                    tallest = Math.max.apply(null, heights); //cache largest value
+                    items.each(function () {
+                        $(this).css('min-height', tallest + 'px');
+                    });
+                };
+                normalizeHeights(); 
+
+                $(window).on('resize orientationchange', function () {
+                    tallest = 0, heights.length = 0; //reset vars
+                    items.each(function () {
+                        $(this).css('min-height', '0'); //reset min-height
+                    });
+                    normalizeHeights(); //run it again 
+                });
+            }
+        }
+
+        $('#myCarousel').hover(function () {
+            $(this).carousel('pause')
+        }, function () {
+            $(this).carousel('cycle')
+            })
+
+    </script>
+    <!--Load the API from the specified URL
+    * The async attribute allows the browser to render the page while the API loads
+    * The key parameter will contain your own API key (which is not needed for this tutorial)
+    * The callback parameter executes the initMap() function
+    -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHFlwXlEzCOsDV9MRsjqL5WVVyAu63QsU&callback=initMap"
+            async defer></script>
+
+}

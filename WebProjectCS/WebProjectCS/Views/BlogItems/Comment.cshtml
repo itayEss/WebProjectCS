@@ -8,7 +8,7 @@
 @{var UName = Html.ViewContext.HttpContext.Session.GetString("UserName");}
 @{var UserID = Html.ViewContext.HttpContext.Session.GetInt32("UserPriv");}
 
-<h2>Create New BlogMassage</h2>
+<h2>Create New Comment</h2>
 <hr />
 <div class="row">
     <div class="col-md-8">
@@ -17,11 +17,9 @@
             
             <div class="form-group">
                 <input type="hidden" asp-for="ConvID" class="form-control " value="@ViewData["ConvID"]" />
-                <span asp-validation-for="ConvID" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="hidden" asp-for="UID" class="form-control" value=@UserID />
-                <span asp-validation-for="UID" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Subject" class="control-label"></label>
@@ -34,8 +32,7 @@
                 <span asp-validation-for="Message" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="hidden" asp-for="RelatedID" class="form-control" value=-1 />
-                <span asp-validation-for="RelatedID" class="text-danger"></span>
+                <input type="hidden" asp-for="RelatedID" class="form-control" value=@ViewData["RelID"] />
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />
@@ -44,12 +41,10 @@
     </div>
 </div>
 
-
-
-
 <div>
     <a asp-controller="ConvBlogItems" asp-action="Conversation" asp-route-id=@ViewData["ConvID"]>Back to List</a>
 </div>
+
 
 
 @section Scripts{
