@@ -5,7 +5,6 @@
 @{
     ViewData["Title"] = "Index";
 
-
 }
 
 <h2>Conversation</h2>
@@ -91,66 +90,111 @@
     @section Scripts{
 
 <script>
-        doStuff();
 
-        function doStuff()
-        {
-            var model = @Html.Raw(Json.Serialize(Model));
+    var uids = [];
+    doStuff();
+    
 
-            for(var item in model)
+ function doStuff()
+ {
+
+     var model = @Html.Raw(Json.Serialize(Model));
+     
+     for(var item in model)
+     {
+        //console.log(model[item].blogItemID);
+         var htmlLine = "<div class='row solid-borders'>"
+         //console.log("my id:"+model[item].uid);
+         //debugger;
+         uids.push(model[item].uid);
+         //console.log(userName);
+         htmlLine += builedBlogItem(model[item].blogItemID, model[item].convID, model[item].subject, model[item].message, model[item].uid , model[item].date)
+         
+         $.get("../../../BlogItems/GetAllLeafs/" + model[item].blogItemID, function (data) {
+            //console.log(data);
+            for (bi in data)
             {
-                //console.log(model[item].blogItemID);
-                var htmlLine = "<div class='row solid-borders'>"
-                console.log(model[item]);
-                htmlLine += builedBlogItem(model[item].blogItemID, model[item].convID,model[item].subject, model[item].message, model[item].uid, model[item].date)
-                $.get("../../../BlogItems/GetAllLeafs/" + model[item].blogItemID, function (data) {
-                    console.log(data);
-                    for (bi in data)
-                    {
-                        console.log("bi: data");
+                //console.log("bi: data");
 
-                        console.log(data[bi]);
-
-                        htmlLine += builedBlogItem(data[bi].blogItemID, data[bi].convID,data[bi].subject, data[bi].message, data[bi].uid, data[bi].date)
-
-                    }
-                    htmlLine += "</div>";
-                    $('#blog-data').append(htmlLine);
-                   
-                })
-                    .done(function (data) {
-                    })
-                    .fail(function (data) {
-                    })
-                    .always(function (data) {
-                    });
-                
-
+                //console.log(bi);                
+                htmlLine += builedChiledBlogItem(data[bi].blogItemID, data[bi].convID, data[bi].subject, data[bi].message, data[bi].uid, data[bi].date);
+                uids.push(data[bi].uid);       
             }
+             
+         })
 
-        }
+             .done(function (data) {
+                 htmlLine += "</div>";
+                 $('#blog-data').append(htmlLine);
+                 fillUName();
+             })
+             .fail(function (data) {
+             })
+             .always(function (data) {
+             });
+     }
+     
 
-        function builedBlogItem(bid,convID,subject, msg, username,date)
+     
+ }       
+    
+    function fillUName()
+    {
+        console.log(uids);
+        for (i in uids)
         {
-            var tempBlogItem =
-                "<div class='solid-borders blog-item'>" +
-                    date +
-                    "<div class='subject-box'>" +
-                        subject +
-                    "</div>" +
-                    "<div class='massage-box'>" +
-                        "<br>"+username+":<br>"+ msg + "<br>" +
-                    "</div>" +
-                    "<div>" + 
-                        "<a href='/BlogItems/Edit/" + bid + "?cid=" + convID + "'>Edit</a> |" +
-                        "<a href='/BlogItems/Details/" + bid + "'>Details</a> | " +
-                        "<a href='/BlogItems/Delete/" + bid + "'>Delete</a> | " +
-                        "<a href='/BlogItems/Comment?rid=" + bid+"&amp;cid="+ convID + "'>Comment</a> " +
+            getUserName(uids[i]);
+         }
+    }
+
+    function getUserName(id) {
+        //console.log("try to get name" + id)
+        //console.log("../../UserAcccounts/GetUserNameById/" + id);
+        $.get("../../UserAcccounts/GetUserNameById/" + id, function (val) {
+            idhttp = '.usr-' + id
+            $(idhttp).html(val);
+        });
+
+    }
+
+    function formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
+
+    function builedBlogItem(bid, convID, subject, msg, uid, date)
+    {
+        
+        let tempBlogItem =
+            "<div class='solid-borders blog-item'>" +
+                formatDate(date) +
+                "<div class='subject-box'>" +
+                subject +
+                "</div>" +
+                "<div class='massage-box'>" +
+                    "<br><div class='usr-" + uid +"'></div><br>" + msg + "<br>" +
+                "</div>" +
+                "<div>" + 
+                    "<a href='/BlogItems/Edit/" + bid + "?cid=" + convID + "'>Edit</a> |" +
+                    "<a href='/BlogItems/Details/" + bid + "'>Details</a> | " +
+                    "<a href='/BlogItems/Delete/" + bid + "'>Delete</a> | " +
+                    "<a href='/BlogItems/Comment?rid=" + bid + "&amp;cid=" + convID + "'>Comment</a> " +
             "</div>";
+
             return tempBlogItem;
-
-        }
-
+    }
+    function builedChiledBlogItem(bid, convID, subject, msg, uid, date) {
+        var tempBlogItem = builedBlogItem(bid, convID, subject, msg, uid, date);
+        tempBlogItem += "</div>";
+        return tempBlogItem;
+    }
 </script>
     }
 

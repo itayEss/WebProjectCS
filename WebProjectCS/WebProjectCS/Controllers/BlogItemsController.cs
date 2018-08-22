@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -99,7 +100,7 @@ namespace WebProjectCS.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    blogItem.Date = new DateTime();
+                    blogItem.Date = DateTime.Now;
                     db.Add(blogItem);
                     await db.SaveChangesAsync();
                     string url = @"../../ConvBlogItems/Conversation/" + blogItem.ConvID;
@@ -210,15 +211,20 @@ namespace WebProjectCS.Controllers
             }
         }
 
-        private async void DeleteBlogItem(BlogItem blogItem)
+        private  void DeleteBlogItem(BlogItem blogItem)
         {
             using (ApplicationDbContextcs db = new ApplicationDbContextcs())
             {
-                if (blogItem != null)
+                try
                 {
-                    db.blogItem.Remove(blogItem);
-                    await db.SaveChangesAsync();
+                    Trace.WriteLine("Trying to delete blogItem");
+                    if (blogItem != null)
+                    {
+                        db.blogItem.Remove(blogItem);
+                        db.SaveChanges();
+                    }
                 }
+                catch (Exception e) { Trace.WriteLine("Problem While deleting blog item"); }
             }
         }
         private async void DeleteLeafs(List<BlogItem> list)

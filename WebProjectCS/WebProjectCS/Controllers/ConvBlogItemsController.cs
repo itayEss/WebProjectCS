@@ -19,12 +19,23 @@ namespace WebProjectCS.Controllers
         {
             using (ApplicationDbContextcs db = new ApplicationDbContextcs())
             {
-                var blogItem = db.blogItem
+                
+                var bi = db.blogItem
                     .Where(b => b.ConvID == id)
                     .Where(b => b.RelatedID == -1);
+                    
+                    /*
+                var bi = from bit in db.blogItem
+                         join us in db.userAccount on bit.UID equals us.UId
+                         where (bit.ConvID == id && bit.RelatedID == -1)
+                         select new
+                         {
+                             bit,
+                             UName = us.UserName
+                        };
+                        */
                 ViewData["ConvID"] = id;
-
-                return View(await blogItem.ToListAsync());
+                return View(await bi.ToListAsync());
             }
         }
 

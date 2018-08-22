@@ -20,6 +20,30 @@ namespace WebProjectCS.Controllers
         //    _context = context;
         //}
 
+        public IActionResult GetUserNameById(int? id)
+        {
+            using (ApplicationDbContextcs db = new ApplicationDbContextcs())
+            {
+
+                var usr =
+                    (from us in db.userAccount
+                     where us.UId == id
+                     select us.UserName);
+
+                if (usr.Count() > 0)
+                {
+                    string name =
+                        (from us in db.userAccount
+                         where us.UId == id
+                         select us.UserName).First().ToString();
+                    //return Json(name);
+                    return Json(name);
+                }
+                return Json("UnKnownUserName");
+            }
+        }
+
+
         // GET: UserAcccounts
         public async Task<IActionResult> Index()
         {
@@ -68,7 +92,9 @@ namespace WebProjectCS.Controllers
                 {
                     db.Add(userAcccount);
                     await db.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    string url = @"../../App/Settings";
+                    return Redirect(url);
+                    
                 }
                 return View(userAcccount);
             }
@@ -123,7 +149,8 @@ namespace WebProjectCS.Controllers
                             throw;
                         }
                     }
-                    return RedirectToAction(nameof(Index));
+                    string url = @"../../App/Settings";
+                    return Redirect(url);
                 }
                 return View(userAcccount);
             }
